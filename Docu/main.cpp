@@ -1,0 +1,85 @@
+#include "docu_singleton.h"
+#include "docu_int2type.h"
+#include "parallel_task.h"
+class MyClass
+{
+public:
+	MyClass(){}
+	void test_debug()
+	{
+		std::cout << "hello world" << std::endl;
+	}
+	~MyClass()
+	{
+		std::cout << "hello world - destory" << std::endl;
+	}
+};
+void test_iiu()
+{
+	/*deco::design_patern::SingleTon<MyClass>::Getinstance()->test_debug();
+	deco::design_patern::SingleTon<MyClass>::Getinstance()->test_debug();*/
+
+	deco::test::pr_1 pr;
+	deco::test::Printf_Test<deco::test::pr_1, true > pre;
+	pre.printf_La(pr);
+
+
+}
+
+class student {
+  std::string name_;
+  int age = 0;
+};
+class teacher {
+  std::string name_;
+  int age_;
+};
+template <typename Tp>
+struct is_student{
+  static const bool value = false;
+};
+template <>
+struct is_student<student> {
+  static const bool value = true;
+};
+void printf_ls(bool id_tra)
+{
+  if(id_tra)
+    std::cout <<"student"<<std::endl;
+}
+void remove_file(const std::string& path_dir,const std::string& reg) {
+	std::regex hit_file(reg);
+    auto fs_ = std::filesystem::directory_iterator(path_dir);
+	for (auto& fe : fs_) {
+	  auto fp = fe.path();
+	  auto fs_ = std::filesystem::directory_iterator(fe.path());
+	  for (auto& fi : fs_)
+	  {
+		auto fp = fi.path();
+		auto trmp = fp.filename();
+		try
+		{
+		  if (trmp.string().find(reg) != std::string::npos)
+			_unlink(fp.string().c_str());
+			std::cout << fp.string().c_str() << std::endl;
+		}
+		catch (const std::exception&)
+		{
+
+		}
+		
+	  }
+	}
+}
+
+
+int main()
+{
+
+  //system("pause");
+  remove_file("D:\\SteamLibrary\\steamapps\\workshop\\content\\431960\\111111111111",".jpg");
+  remove_file("D:\\SteamLibrary\\steamapps\\workshop\\content\\431960\\111111111111", ".json");
+
+
+  return 0;
+}
