@@ -1,6 +1,7 @@
 #include "docu_singleton.h"
 #include "docu_int2type.h"
 #include "parallel_task.h"
+#include "docu_thread_pool.h"
 class MyClass
 {
 public:
@@ -59,27 +60,38 @@ void remove_file(const std::string& path_dir,const std::string& reg) {
 		auto trmp = fp.filename();
 		try
 		{
-		  if (trmp.string().find(reg) != std::string::npos)
+		  if (trmp.string().find(reg) != std::string::npos) {
 			_unlink(fp.string().c_str());
 			std::cout << fp.string().c_str() << std::endl;
+		  }	
 		}
-		catch (const std::exception&)
-		{
-
-		}
-		
+		catch (const std::exception&){}		
 	  }
 	}
 }
-
-
 int main()
 {
-
+  auto funcA = []() { std::cout << "printB" << std::endl; };
+  auto funcB = [](){ std::cout << "printA" << std::endl; };
+  docu::thread_pool::DocuThread dou_task;
+  dou_task.Run();
+  if (dou_task.CouldAddTask()) dou_task.AddTask(funcA);
+   for(int i = 0 ; i < 1000000; i++) {}
+  if(dou_task.CouldAddTask()) dou_task.AddTask(funcB);
+ // while(1);
   //system("pause");
-  remove_file("D:\\SteamLibrary\\steamapps\\workshop\\content\\431960\\111111111111",".jpg");
-  remove_file("D:\\SteamLibrary\\steamapps\\workshop\\content\\431960\\111111111111", ".json");
-
-
+  for (int i = 0; i < 1000000; i++) {}
+  if (dou_task.CouldAddTask()) dou_task.AddTask(funcB);
+  if (dou_task.CouldAddTask()) dou_task.AddTask(funcA);
+  for (int i = 0; i < 1000000; i++) {}
+  if (dou_task.CouldAddTask()) dou_task.AddTask(funcB);
+  // while(1);
+   //system("pause");
+  for (int i = 0; i < 1000000; i++) {}
+  if (dou_task.CouldAddTask()) dou_task.AddTask(funcB);
+  dou_task.stop();
+ // system("pause");
+  //while(1);
+  for (int i = 0; i < 1000000; i++) {}
   return 0;
 }
